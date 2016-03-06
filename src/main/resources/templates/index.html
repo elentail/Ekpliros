@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link  th:href="@{/webjars/bootstrap/3.3.4/css/bootstrap.min.css}"
+          rel="stylesheet" media="screen"/>
+    <script src="http://cdn.jsdelivr.net/webjars/jquery/2.2.0/dist/jquery.min.js"
+            th:src="@{/webjars/jquery/2.2.0/dist/jquery.min.js}"></script>
+</head>
+<body>
+	<th:block th:include="fragments/header :: header"></th:block>
+	<h1>TEST</h1>
+	<th:block th:include="fragments/footer :: footer"></th:block>
+	 
+</body>
+</html>
