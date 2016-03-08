@@ -15,6 +15,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,13 +25,14 @@ import org.springframework.transaction.annotation.Transactional;
  *
  */
 @Service
-public class CustomAuthService {
+public class CustomAuthService implements UserDetailsService{
 	private Logger log = Logger.getLogger(CustomAuthService.class);
 	
 	@Autowired
 	private UserRepository userRepository;
 
 	@Transactional
+	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		org.roadking.model.Users user =  userRepository.findByUsername(username);
 		List<GrantedAuthority> authorities = buildUserAuthority(user.getUserRoles());
