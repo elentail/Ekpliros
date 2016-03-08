@@ -55,18 +55,23 @@ public class LogginController {
 	@RequestMapping(value = "/userLoggin")
 	public @ResponseBody String userLogginPage( HttpServletRequest request, HttpServletResponse response) {
 		if (request.getSession().getAttribute("SSO") == null) {
-			
 			log.info(SecurityContextHolder.getContext().getAuthentication().getName());
-			UserDetails user = customAuthService.loadUserByUsername("admin");
-			Authentication auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-			SecurityContextHolder.getContext().setAuthentication(auth);
-			request.getSession().setAttribute("SSO", "ADMIN");
-			
 			
 			try {
-				if(auth.isAuthenticated())
+				
+				UserDetails user = customAuthService.loadUserByUsername("admin");
+				if(user != null){
+					log.info("Login Success");
+					Authentication auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+					SecurityContextHolder.getContext().setAuthentication(auth);
+					request.getSession().setAttribute("SSO", "ADMIN");
 					saveRequestHandler.onAuthenticationSuccess(request, response, auth);
-					
+				}
+				else{
+					log.warn("Login fail");
+					//Manually Login 실패시 처리 로직
+					//request.getRequestDispatcher("/").forward(request, response);
+				}
 				
 			} catch (ServletException e) {
 				// TODO Auto-generated catch block
