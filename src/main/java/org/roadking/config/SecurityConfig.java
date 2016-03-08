@@ -95,5 +95,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     = new SavedRequestAwareAuthenticationSuccessHandler();
        		auth.setUseReferer(true);
 		return auth;
-	}	
+	}
 }

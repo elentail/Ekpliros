@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Roadking
  *
  */
-@Service
+@Service("customAuthService")
 public class CustomAuthService implements UserDetailsService{
 	private Logger log = Logger.getLogger(CustomAuthService.class);
 	

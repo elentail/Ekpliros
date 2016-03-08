@@ -1,18 +1,24 @@
 package org.roadking.controller;
 
 
+import java.io.IOException;
+
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.roadking.service.CustomAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class LogginController {
@@ -20,7 +26,12 @@ public class LogginController {
 	private Logger log = Logger.getLogger(LogginController.class);
 	
 	@Autowired
-	private CustomAuthService customAuthService;
+	@Qualifier(value="customAuthService")
+	private UserDetailsService customAuthService;
+	
+	@Autowired
+	private SavedRequestAwareAuthenticationSuccessHandler saveRequestHandler;
+	
 	
 	@RequestMapping(value = "/")
 	public String indexPage() {
@@ -42,13 +53,28 @@ public class LogginController {
 	}
 
 	@RequestMapping(value = "/userLoggin")
-	public String userLogginPage( HttpServletRequest request, Model model) {
+	public @ResponseBody String userLogginPage( HttpServletRequest request, HttpServletResponse response) {
 		if (request.getSession().getAttribute("SSO") == null) {
+			
 			log.info(SecurityContextHolder.getContext().getAuthentication().getName());
 			UserDetails user = customAuthService.loadUserByUsername("admin");
 			Authentication auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 			SecurityContextHolder.getContext().setAuthentication(auth);
 			request.getSession().setAttribute("SSO", "ADMIN");
+			
+			
+			try {
+				if(auth.isAuthenticated())
+					saveRequestHandler.onAuthenticationSuccess(request, response, auth);
+					
+				
+			} catch (ServletException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return "redirect:/";
 	}
