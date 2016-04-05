@@ -69,7 +69,7 @@ public class LogginController {
 				}
 				else{
 					log.warn("Login fail");
-					//Manually Login 실패시 처리 로직
+					//Manually Login
 					//request.getRequestDispatcher("/").forward(request, response);
 				}
 				

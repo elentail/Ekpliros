@@ -14,7 +14,6 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 
 /**
  * @author Roadking
- * @ 사용안함 
  */
 public class CustomAuthFailureHandler implements AuthenticationFailureHandler {
 
